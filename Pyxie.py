@@ -26,12 +26,18 @@ def main(args=None):
     Pyxie = Image.new('RGBA', (anchoTotal, alturaMaxima), (255,255,255,0))
 
     offsetX = offsetY = 0
-    
-    for img, path in imagenes:
-        Pyxie.paste(img, (offsetX,0)) # Pegar cada imagen en el sprite.
-	print '[{0}] background-position: {1}px 0px !important;'.format(path, offsetX,) 
-        offsetX += img.size[0] # Moverse al final de la imagen.
-    Pyxie.save('Pyxie.png', 'PNG')
+    agregados = 0 # cantidad de archivos agregados al sprite final
+
+    with open('Pyxie.css', 'w') as css:
+        css.write('.Pyxie { background: #fff url(\'Pyxie.png\') no-repeat; }\n\n')
+        for img, path in imagenes:
+            Pyxie.paste(img, (offsetX,0)) # Pegar cada imagen en el sprite.
+            print '[{0} agregado] w:{1} h:{2} x:{3} y:{4};'.format(path, img.size[0], img.size[1], offsetX, offsetY)
+            css.write('.Pyxie_{0} {{ background-position: -{1}px 0px !important; }}\n'.format(path[6:-4], offsetX))
+            offsetX += img.size[0] # Moverse al final de la imagen.
+            agregados += 1
+        Pyxie.save('Pyxie.png', 'PNG')
+        print '{0} imagenes agregadas a Pyxie.png ({1}x{2}px)'.format(agregados, anchoTotal, alturaMaxima)
     
 if __name__ == '__main__':
     main()
