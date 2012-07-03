@@ -13,7 +13,7 @@ def main(args=None):
     # a una lista.
     for imgPath in listaImgCarpeta:
 	    img = Image.open(imgPath)
-	    imagenes.append(img.copy())
+	    imagenes.append([img.copy(), imgPath])
 	    
 	    # Se usara para determinar el ancho total del sprite final
 	    anchoTotal += img.size[0]
@@ -26,9 +26,10 @@ def main(args=None):
     Pyxie = Image.new('RGBA', (anchoTotal, alturaMaxima), (255,255,255,0))
 
     offsetX = offsetY = 0
-
-    for img in imagenes:
+    
+    for img, path in imagenes:
         Pyxie.paste(img, (offsetX,0)) # Pegar cada imagen en el sprite.
+	print '[{0}] background-position: {1}px 0px !important;'.format(path, offsetX,) 
         offsetX += img.size[0] # Moverse al final de la imagen.
     Pyxie.save('Pyxie.png', 'PNG')
     
